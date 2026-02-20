@@ -183,32 +183,8 @@ export function Home() {
                     <MacrofluxoTeaser />
                 </div>
             </section>
-
-            {/* Stats Section */}
-            <section className="container" style={{ padding: '100px 24px' }}>
-                <div className="card flex items-center justify-between" style={{ background: 'linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-app) 100%)' }}>
-                    <div style={{ padding: '40px' }}>
-                        <h2 className="h2" style={{ marginBottom: '16px' }}>Impacto em números</h2>
-                        <p className="text-body">Acompanhe a performance do sistema de controle em tempo real.</p>
-                    </div>
-                    <div className="flex gap-8" style={{ padding: '40px' }}>
-                        <Stat number="98%" label="Prazos Atendidos" />
-                        <Stat number="1.2k" label="Manifestações" />
-                        <Stat number="14" label="Ciclos de Auditoria" />
-                    </div>
-                </div>
-            </section>
         </div>
     );
-}
-
-function Stat({ number, label }) {
-    return (
-        <div>
-            <div style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--col-primary)' }}>{number}</div>
-            <div className="text-body text-sm uppercase tracking-wider">{label}</div>
-        </div>
-    )
 }
 
 function MacrofluxoTeaser() {

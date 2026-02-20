@@ -3,6 +3,41 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, FileText, ArrowRight, Layers } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
+const numbers2025 = [
+    {
+        title: 'Controle Contábil e Financeiro',
+        metrics: [
+            { value: 460, label: 'Processos de adiantamentos' },
+            { value: 288, label: 'Pareceres técnicos' }
+        ]
+    },
+    {
+        title: 'Ateste de Conformidade',
+        metrics: [
+            { value: 810, label: 'Processos analisados' },
+            { value: 241, label: 'Processos com apontamentos' }
+        ]
+    },
+    {
+        title: 'Contrato de Gestão',
+        metrics: [
+            { value: 5, label: 'Contratos com fluxo padronizado' }
+        ]
+    },
+    {
+        title: 'Requisições Tribunal de Contas',
+        metrics: [
+            { value: 403, label: 'Envios e acompanhamentos de requisições' }
+        ]
+    },
+    {
+        title: 'Visitas',
+        metrics: [
+            { value: 885, label: 'Visitas realizadas' }
+        ]
+    }
+];
+
 export function DetailPanel({ hidden, node, onClose }) {
     if (!node) return null;
     const defaultTypes = useMemo(() => {
@@ -24,9 +59,15 @@ export function DetailPanel({ hidden, node, onClose }) {
         return ['Conformidade', 'Execução', 'Tribunal de Contas'];
     }, [node?.id]);
     const [selectedTypes, setSelectedTypes] = useState(defaultTypes);
+    const [showNumbers, setShowNumbers] = useState(false);
     useEffect(() => {
         setSelectedTypes(defaultTypes);
+        setShowNumbers(false);
     }, [node?.id]);
+    const maxMetricValue = useMemo(() => {
+        const values = numbers2025.flatMap((group) => group.metrics.map((m) => m.value));
+        return Math.max(...values, 1);
+    }, []);
     const filteredPops = useMemo(() => {
         if (!node.details?.pops?.length) return [];
         if (!selectedTypes.length) return [];
@@ -56,6 +97,73 @@ export function DetailPanel({ hidden, node, onClose }) {
                         overflowY: 'auto'
                     }}
                 >
+                    {showNumbers && (
+                        <div style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'white',
+                            padding: '24px',
+                            zIndex: 10,
+                            overflowY: 'auto'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                                <h4 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Números 2025</h4>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowNumbers(false)}
+                                    style={{
+                                        background: 'var(--bg-app)',
+                                        border: 'none',
+                                        padding: '6px 10px',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Fechar
+                                </button>
+                            </div>
+                            <div style={{ display: 'grid', gap: '16px' }}>
+                                {numbers2025.map((group) => (
+                                    <div key={group.title} className="card" style={{ padding: '16px 18px' }}>
+                                        <div style={{ fontWeight: 700, marginBottom: '10px' }}>{group.title}</div>
+                                        <div style={{ display: 'grid', gap: '12px' }}>
+                                            {group.metrics.map((metric) => {
+                                                const percent = Math.round((metric.value / maxMetricValue) * 100);
+                                                return (
+                                                    <div key={metric.label} style={{ display: 'grid', gap: '6px' }}>
+                                                        <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--col-primary)' }}>
+                                                            {metric.value}
+                                                        </div>
+                                                        <div style={{ fontSize: '0.9rem', color: 'var(--text-main)' }}>
+                                                            {metric.label}
+                                                        </div>
+                                                        <div style={{
+                                                            height: '8px',
+                                                            width: '100%',
+                                                            background: 'var(--bg-app)',
+                                                            borderRadius: '999px',
+                                                            overflow: 'hidden'
+                                                        }}>
+                                                            <motion.div
+                                                                initial={{ width: 0 }}
+                                                                animate={{ width: `${percent}%` }}
+                                                                transition={{ duration: 0.6 }}
+                                                                style={{
+                                                                    height: '100%',
+                                                                    background: 'var(--col-primary)',
+                                                                    borderRadius: '999px'
+                                                                }}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {/* Header */}
                     <div className="flex justify-between items-start" style={{ marginBottom: '32px' }}>
                         <div>
@@ -111,10 +219,28 @@ export function DetailPanel({ hidden, node, onClose }) {
                         </div>
                     </div>
 
-                    <div>
-                        <h4 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <FileText size={16} /> Processos Relacionados (POPs)
-                        </h4>
+                    <div style={{ position: 'relative' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                            <h4 style={{ fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <FileText size={16} /> Processos Relacionados (POPs)
+                            </h4>
+                            <button
+                                type="button"
+                                onClick={() => setShowNumbers(true)}
+                                style={{
+                                    background: 'var(--col-primary)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '999px',
+                                    padding: '6px 12px',
+                                    fontSize: '0.8rem',
+                                    fontWeight: 600,
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                Ver números
+                            </button>
+                        </div>
                         <div className="flex flex-col gap-2">
                             {filteredPops.map((pop, i) => {
                                 const isObject = pop && typeof pop === 'object';
@@ -147,6 +273,7 @@ export function DetailPanel({ hidden, node, onClose }) {
                                 );
                             })}
                         </div>
+
                     </div>
 
                     <div style={{ marginTop: '40px' }}>
