@@ -24,9 +24,7 @@ const produtos = [
             },
             {
                 nome: 'Monitor TCE-SP',
-                url: null,
-                emConstrucao: true,
-                dataLancamento: '15/04'
+                url: 'https://app.powerbi.com/view?r=eyJrIjoiYzRmNjE4ZmItZjUxNy00ZDc3LWJiYzctYjA0MjVlNDM1YzAxIiwidCI6IjhjZGE5NWUzLTZhMDYtNGQ3ZC1iYmFlLTM3MzhkNWMxZWM0NSJ9'
             }
         ]
     },
@@ -57,6 +55,10 @@ const produtos = [
                         url: 'https://drive.google.com/file/d/14yGLk_NuaYaEV5x3UXzbpDOR410Rt7U4/view?usp=sharing'
                     }
                 ]
+            },
+            {
+                nome: 'Prêmios e Certificados',
+                url: 'https://www.sjc.sp.gov.br/servicos/governanca/portal-da-transparencia/premios-e-certificados/'
             }
         ],
         seloOuro: {
@@ -70,15 +72,23 @@ const produtos = [
         icone: User,
         cor: '#f59e0b',
         corSubtle: '#fef3c7',
+        mostraConexao: true
+    },
+    {
+        id: 6,
+        nome: 'Seu José',
+        descricao: <>Lançamento do <strong>156 no WhatsApp</strong>! O "Seu José" é o novo canal que aproxima o cidadão da Prefeitura, permitindo registrar solicitações e demandas de forma rápida e direta pelo WhatsApp.</>,
+        icone: Phone,
+        cor: '#2563eb',
+        corSubtle: '#dbeafe',
+        iconeImagem: 'https://www.sjc.sp.gov.br/media/3whhjihe/14730_b_s7_banner_web_seu_jose_940x627px.png?width=940&height=627&v=1dcd72adb606c40',
+        telefone: '(12) 99710-0156',
         linksAdicionais: [
             {
-                nome: '156 no Whatsapp',
-                url: null,
-                emConstrucao: true,
-                dataLancamento: '20/04'
+                nome: 'Saiba mais',
+                url: 'https://www.sjc.sp.gov.br/noticias/2026/abril/24/prefeitura-lanca-o-whatsapp-156-com-servicos-24h/'
             }
-        ],
-        mostraConexao: true
+        ]
     },
     {
         id: 4,
@@ -98,6 +108,10 @@ const produtos = [
             url: 'https://i.ibb.co/PvLktK3L/CITE-Logo.png'
         },
         linksAdicionais: [
+            {
+                nome: 'Apresentação',
+                url: 'https://canva.link/h1cs0xcedsbwvx6'
+            },
             {
                 nome: 'CITE - Saúde',
                 url: 'https://lookerstudio.google.com/reporting/16f9b762-b1b6-4763-adfa-4b1bd680cc97'
@@ -140,6 +154,18 @@ const produtos = [
                 url: 'https://lookerstudio.google.com/reporting/347de84c-3304-4d05-bfc0-a9fe28916b0f/page/p_lp6eg9v4qd'
             }
         ]
+    },
+    {
+        id: 7,
+        nome: 'Processos Inteligentes',
+        descricao: 'União entre mapeamento de processos, POPs, IA e automação para gerar eficiência real.',
+        icone: Network,
+        cor: '#1e293b',
+        corSubtle: '#e2e8f0',
+        iconeImagem: 'https://i.ibb.co/hFVYpmn5/processos-inteligentes.png',
+        iconeImagemFundo: 'transparent',
+        url: 'https://canva.link/rud7ex8t7iatm6b',
+        textoAcesso: 'Apresentação'
     }
 ];
 
@@ -224,7 +250,50 @@ export function Produto() {
                                     </div>
                                 )}
 
-                                {/* Ícone e Imagem */}
+                                {/* Selo de Destaque - Canto Superior Direito */}
+                                {produto.destaque && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '16px',
+                                        right: '16px',
+                                        padding: '4px 12px',
+                                        borderRadius: '999px',
+                                        background: produto.cor,
+                                        color: '#ffffff',
+                                        fontSize: '0.7rem',
+                                        fontWeight: 700,
+                                        letterSpacing: '0.05em',
+                                        textTransform: 'uppercase',
+                                        zIndex: 1
+                                    }}>
+                                        {produto.destaque}
+                                    </div>
+                                )}
+
+                                {/* Ícone como Banner (imagem) */}
+                                {produto.iconeImagem ? (
+                                    <div style={{
+                                        width: '100%',
+                                        borderRadius: '16px',
+                                        overflow: 'hidden',
+                                        background: produto.iconeImagemFundo || produto.corSubtle,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <img
+                                            src={produto.iconeImagem}
+                                            alt={produto.nome}
+                                            style={{
+                                                width: '100%',
+                                                height: '160px',
+                                                objectFit: 'contain'
+                                            }}
+                                        />
+                                    </div>
+                                ) : (
+
+                                /* Ícone e Imagem */
                                 <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -271,9 +340,14 @@ export function Produto() {
                                         </div>
                                     )}
                                 </div>
+                                )}
 
                                 {/* Conteúdo */}
-                                <div style={{ flex: 1 }}>
+                                <div style={{
+                                    flex: 1,
+                                    display: produto.iconeImagem ? 'flex' : 'block',
+                                    flexDirection: 'column'
+                                }}>
                                     <h3 className="h3" style={{ 
                                         marginBottom: produto.subtitulo ? '4px' : '12px',
                                         color: 'var(--text-main)',
@@ -347,12 +421,55 @@ export function Produto() {
                                             </div>
                                         </div>
                                     ) : (
-                                        <p className="text-body" style={{ 
-                                            lineHeight: '1.6',
-                                            color: 'var(--text-body)'
-                                        }}>
-                                            {produto.descricao}
-                                        </p>
+                                        <>
+                                            <p className="text-body" style={{ 
+                                                lineHeight: '1.6',
+                                                color: 'var(--text-body)'
+                                            }}>
+                                                {produto.descricao}
+                                            </p>
+                                            {produto.telefone && (
+                                                <div style={{
+                                                    flex: 1,
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    gap: '6px',
+                                                    margin: '12px 0'
+                                                }}>
+                                                    <span style={{
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 600,
+                                                        textTransform: 'uppercase',
+                                                        letterSpacing: '0.08em',
+                                                        color: 'var(--text-body)'
+                                                    }}>
+                                                        Fale com o Seu José
+                                                    </span>
+                                                    <a
+                                                        href={`https://wa.me/55${produto.telefone.replace(/\D/g, '')}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: '10px',
+                                                            fontSize: '1.7rem',
+                                                            fontWeight: 800,
+                                                            color: produto.cor,
+                                                            textDecoration: 'none',
+                                                            lineHeight: '1.1'
+                                                        }}
+                                                        onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                                                        onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                                                    >
+                                                        <Phone size={26} strokeWidth={2.5} />
+                                                        {produto.telefone}
+                                                    </a>
+                                                </div>
+                                            )}
+                                        </>
                                     )}
                                 </div>
 
@@ -383,7 +500,7 @@ export function Produto() {
                                                 onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                                                 onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                                             >
-                                                <span>{produto.id === 2 ? 'Transparência' : 'Acesse aqui'}</span>
+                                                <span>{produto.textoAcesso || (produto.id === 2 ? 'Transparência' : 'Acesse aqui')}</span>
                                                 <ArrowRight size={18} />
                                             </Link>
                                         ) : (
@@ -404,7 +521,7 @@ export function Produto() {
                                                 onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                                                 onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                                             >
-                                                <span>{produto.id === 2 ? 'Transparência' : 'Acesse aqui'}</span>
+                                                <span>{produto.textoAcesso || (produto.id === 2 ? 'Transparência' : 'Acesse aqui')}</span>
                                                 <ArrowRight size={18} />
                                             </a>
                                         )
